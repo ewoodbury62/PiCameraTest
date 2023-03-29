@@ -280,6 +280,15 @@
 
 <html>
 <body>
+	 <head>
+      <meta name="viewport" content="width=550, initial-scale=1">
+      <title><?php echo CAM_STRING; ?></title>
+      <link rel="stylesheet" href="css/style_minified.css" />
+      <link rel="stylesheet" href="<?php echo getStyle(); ?>" />
+      <script src="js/style_minified.js"></script>
+      <script src="js/script.js"></script>
+      <script src="js/pipan.js"></script>
+   </head>
   <link rel="stylesheet" type="text/css" href="wrapSM.css" />
   <div class="float-container">
     <div class="float-child">
