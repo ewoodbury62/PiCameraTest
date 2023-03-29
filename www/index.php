@@ -319,78 +319,8 @@
     
       <div class="container-fluid text-center">
          <div class="panel-group" id="accordion" <?php getdisplayStyle('settings', $userLevel); ?> >
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h2 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Camera Settings</a>
-                  </h2>
-               </div>
-            </div>
-            <div class="panel panel-default" <?php  if($config['motion_external'] == '1') echo "style ='display:none;'"; ?>>
-               <div class="panel-heading">
-                  <h2 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Motion Settings</a>
-                  </h2>
-               </div>
-               <div id="collapseTwo" class="panel-collapse collapse">
-                  <div class="panel-body">
-                     <table class="settingsTable">
-                        <tr>
-                          <td>Motion Vector Preview:</td>
-                          <td>
-                            <select onchange="send_cmd('vp ' + this.value);setTimeout(function(){location.reload(true);}, 1000);" id="preview_select"><?php makeOptions($options_vp, 'vector_preview'); ?></select>
-                          </td>
-                        </tr>
-                        <tr>
-                           <td>Noise level (1-255 / >1000):</td>
-                           <td>
-                              <?php makeInput('motion_noise', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mn ' + document.getElementById('motion_noise').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Threshold (1-32000):</td>
-                           <td>
-                              <?php makeInput('motion_threshold', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mt ' + document.getElementById('motion_threshold').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Clipping factor (2-50), default 3:</td>
-                           <td>
-                              <?php makeInput('motion_clip', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mc ' + document.getElementById('motion_clip').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Mask Image:</td>
-                           <td>
-                              <?php makeInput('motion_image', 30); ?><input type="button" value="OK" onclick="send_cmd('mi ' + document.getElementById('motion_image').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Delay Frames to detect:</td>
-                           <td>
-                              <?php makeInput('motion_initframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('ms ' + document.getElementById('motion_initframes').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Change Frames to start:</td>
-                           <td>
-                              <?php makeInput('motion_startframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mb ' + document.getElementById('motion_startframes').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Still Frames to stop:</td>
-                           <td>
-                              <?php makeInput('motion_stopframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('me ' + document.getElementById('motion_stopframes').value)">
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>Save vectors to .dat:<br>(Uses more space)</td>
-                           <td><select onchange="send_cmd('mf ' + this.value);"><?php makeOptions($options_mf, 'motion_file'); ?></select></td>
-                        </tr>
-                     </table>
-                  </div>
-               </div>
-            </div>
+            
+            
             <div class="panel panel-default">
                <div class="panel-heading">
                   <h2 class="panel-title">
