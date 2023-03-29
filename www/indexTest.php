@@ -321,7 +321,7 @@
       				</div>
     			</div>
   		</div>
-      	<?php if ($debugString != "") echo "$debugString<br>"; ?>
+      	
 </body>
 </html>
 
