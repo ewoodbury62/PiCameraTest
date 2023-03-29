@@ -304,7 +304,7 @@
       						<button>LED Control</button>
       						<button onclick="tubeClick()">YouTube Tutorials</button>
     					</p>
-  				</div>
+  				</div> 
     			</div>
     			<div class = "float-child">
       				<div class = "app" id = "app" style="margin:10px;">
