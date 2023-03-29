@@ -283,6 +283,7 @@
 	<head>
     		<meta name="viewport" content="width=800, initial-scale=1">
       		<title><?php echo CAM_STRING; ?></title>
+		<link rel="stylesheet" href="css/style_minified.css" />
       		<link rel="stylesheet" href="<?php echo getStyle(); ?>" />
 		<link rel="stylesheet" type="text/css" href="wrapSM.css" />
       		<script src="js/script.js"></script>
