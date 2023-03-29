@@ -281,7 +281,7 @@
 <html>
 <body  onload="setTimeout('init(<?php echo "$mjpegmode, $video_fps, $divider" ?>);', 100);">
 	<head>
-    		<meta name="viewport" content="width=550, initial-scale=1">
+    		<meta name="viewport" content="width=80, initial-scale=1">
       		<title><?php echo CAM_STRING; ?></title>
       		<link rel="stylesheet" href="<?php echo getStyle(); ?>" />
 		<link rel="stylesheet" type="text/css" href="wrapSM.css" />
