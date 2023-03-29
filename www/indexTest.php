@@ -322,16 +322,6 @@
       <div class="container-fluid text-center liveimage">
          <div><img id="mjpeg_dest" <?php echo getLoadClass() . getImgWidth();?>
 		 <?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg"></div>
-         <div id="main-buttons">
-            <input id="image_button" type="button" class="btn btn-primary" <?php getdisplayStyle('actions', $userLevel); ?>>
-		 <input id="halt_button" type="button" class="btn btn-danger" <?php getdisplayStyle('settings', $userLevel); ?>>
-         </div>
-      </div>
-      <div id="secondary-buttons" class="container-fluid text-center">
-         <?php pan_controls(); ?>
-         <?php user_buttons(); ?>
-         <a href="preview.php" class="btn btn-default" <?php getdisplayStyle('preview', $userLevel); ?>>Download Videos and Images</a>
-         &nbsp;&nbsp;
       </div>
     
       </div>
