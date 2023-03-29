@@ -311,14 +311,8 @@
     </div>
     <div class = "float-child">
       <div class = "app" id = "app" style="margin:10px;">
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" <?php getdisplayStyle('navbar', $userLevel); ?>>
-         <div class="container">
-            <div class="navbar-header">
-               <a class="navbar-brand" href="#"><?php echo CAM_STRING; ?></a>
-            </div>
-         </div>
-      </div>
-	  <?php simple_button(); ?>
+        
+	  
       <div class="container-fluid text-center liveimage">
          <div><img id="mjpeg_dest" <?php echo getLoadClass() . getImgWidth();?>
 		 <?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg"></div>
