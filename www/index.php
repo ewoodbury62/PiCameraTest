@@ -313,8 +313,6 @@
          <?php user_buttons(); ?>
          <a href="preview.php" class="btn btn-default" <?php getdisplayStyle('preview', $userLevel); ?>>Download Videos and Images</a>
          &nbsp;&nbsp;
-         <?php  if($config['motion_external'] == '1'): ?><a href="motion.php" class="btn btn-default" <?php getdisplayStyle('settings', $userLevel); ?>>Edit motion settings</a>&nbsp;&nbsp;<?php endif; ?>
-         <a href="schedule.php" class="btn btn-default" <?php getdisplayStyle('settings', $userLevel); ?>>Edit schedule settings</a>
       </div>
     
       
