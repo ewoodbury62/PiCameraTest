@@ -314,7 +314,7 @@
 		 					<?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg">
 	      					</div>
       					</div>
-    
+					<input id="image_button" type="button"  class="btn btn-primary" <?php getdisplayStyle('actions', (int)USERLEVEL_MEDIUM); ?>>
       				</div>
     			</div>
   		</div>
