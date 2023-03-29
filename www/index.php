@@ -344,20 +344,6 @@
                   </div>
                </div>
             </div>
-            <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h2 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Help</a>
-                  </h2>
-               </div>
-               <div id="collapseFour" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    Github: <a href="https://github.com/silvanmelchior/RPi_Cam_Web_Interface" target="_blank">https://github.com/silvanmelchior/RPi_Cam_Web_Interface</a><br>
-                    Forum: <a href="http://www.raspberrypi.org/forums/viewtopic.php?f=43&t=63276" target="_blank">http://www.raspberrypi.org/forums/viewtopic.php?f=43&t=63276</a><br>
-                    Wiki: <a href="http://elinux.org/RPi-Cam-Web-Interface" target="_blank">http://elinux.org/RPi-Cam-Web-Interface</a>
-                  </div>
-               </div>
-            </div>
          </div>
       </div>
       <?php if ($debugString != "") echo "$debugString<br>"; ?>
