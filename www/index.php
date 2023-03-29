@@ -301,9 +301,10 @@
          <div><img id="mjpeg_dest" <?php echo getLoadClass() . getImgWidth();?>
 		 <?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg"></div>
          <div id="main-buttons">
-            
+            <input id="video_button" type="button" class="btn btn-primary" <?php getdisplayStyle('actions', $userLevel); ?>>
             <input id="image_button" type="button" class="btn btn-primary" <?php getdisplayStyle('actions', $userLevel); ?>>
-            
+            <input id="timelapse_button" type="button" class="btn btn-primary" <?php getdisplayStyle('actions', $userLevel); ?>>
+            <input id="md_button" type="button" class="btn btn-primary" <?php getdisplayStyle('settings', $userLevel); ?>>
             <input id="halt_button" type="button" class="btn btn-danger" <?php getdisplayStyle('settings', $userLevel); ?>>
          </div>
       </div>
@@ -318,7 +319,293 @@
     
       <div class="container-fluid text-center">
          <div class="panel-group" id="accordion" <?php getdisplayStyle('settings', $userLevel); ?> >
-            
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h2 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Camera Settings</a>
+                  </h2>
+               </div>
+               <div id="collapseOne" class="panel-collapse collapse">
+                  <div class="panel-body">
+                     <table class="settingsTable">
+                        <tr>
+                           <td>Resolutions:</td>
+                           <td>Load Preset: <select onchange="set_preset(this.value)">
+								<?php if(!file_exists('uPresets.html')) : ?>
+                                 <option value="1920 1080 25 25 2592 1944 1">Select option...</option>
+                                 <option value="1920 1080 25 25 2592 1944 1">Full HD 1080p 16:9</option>
+                                 <option value="1280 0720 25 25 2592 1944 1">HD-ready 720p 16:9</option>
+                                 <option value="1296 972 25 25 2592 1944 1">Max View 972p 4:3</option>
+                                 <option value="768 576 25 25 2592 1944 1">SD TV 576p 4:3</option>
+                                 <option value="1920 1080 01 30 2592 1944 1">Full HD Timelapse (x30) 1080p 16:9</option>
+								 <?php else : include 'uPresets.html'; endif; ?>
+                              </select><br>
+                              Custom Values:<br>
+                              Video res: <?php makeInput('video_width', 4, null, 'number'); ?>x<?php makeInput('video_height', 4, null, 'number'); ?>px<br>
+                              Video fps: <?php makeInput('video_fps', 3, null, 'number'); ?>recording, <?php makeInput('MP4Box_fps', 3, null, 'number'); ?>boxing<br>
+                              FPS divider: <?php makeInput('fps_divider', 3, null, 'number'); ?><br>
+                              Image res: <?php makeInput('image_width', 4, null, 'number'); ?>x<?php makeInput('image_height', 4, null, 'number'); ?>px<br>
+                              <input type="button" value="OK" onclick="set_res();">
+                           </td>
+                        </tr>
+                        <?php  if($config['camera_num'] > 0): ?> 
+                        <tr>
+                           <td>Camera select (Compute module only)</td>
+                           <td>
+                              Use camera: <select onchange="send_cmd('cn ' + this.value)"><?php makeOptions($options_cn, 'camera_num'); ?></select>
+                           </td>
+                        </tr>
+                        <?php endif; ?>
+                        <tr>
+                           <td>Timelapse-Interval (0.1...3200):</td>
+                           <td><?php makeInput('tl_interval', 4, null, 'number'); ?>s <input type="button" value="OK" onclick="send_cmd('tv ' + 10 * document.getElementById('tl_interval').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Video Split (seconds, default 0=off):</td>
+                           <td><?php makeInput('video_split', 6, null, 'number'); ?>s <input type="button" value="OK" onclick="send_cmd('vi ' + document.getElementById('video_split').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Annotation (max 127 characters):</td>
+                           <td>
+                              Text: <?php makeInput('annotation', 20); ?><input type="button" value="OK" onclick="send_cmd('an ' + encodeURI(document.getElementById('annotation').value))"><input type="button" value="Default" onclick="document.getElementById('annotation').value = 'RPi Cam %Y.%M.%D_%h:%m:%s'; send_cmd('an ' + encodeURI(document.getElementById('annotation').value))"><br>
+                              Background: <select onchange="send_cmd('ab ' + this.value)"><?php makeOptions($options_ab, 'anno_background'); ?></select>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Annotation size(0-99):</td>
+                           <td>
+                              <?php makeInput('anno_text_size', 3, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('as ' + document.getElementById('anno_text_size').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Custom text color:</td>
+                           <td><select id="at_en"><?php makeOptions($options_at_en, 'anno3_custom_text_colour'); ?></select>
+                              y:u:v = <?php makeInput('at_y', 3, 'anno3_custom_text_Y'); ?>:<?php makeInput('at_u', 4, 'anno3_custom_text_U'); ?>:<?php makeInput('at_v', 4, 'anno3_custom_text_V'); ?>
+                              <input type="button" value="OK" onclick="set_at();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Custom background color:</td>
+                           <td><select id="ac_en"><?php makeOptions($options_ac_en, 'anno3_custom_background_colour'); ?></select>
+                              y:u:v = <?php makeInput('ac_y', 3, 'anno3_custom_background_Y'); ?>:<?php makeInput('ac_u', 4, 'anno3_custom_background_U'); ?>:<?php makeInput('ac_v', 4, 'anno3_custom_background_V'); ?>
+                              <input type="button" value="OK" onclick="set_ac();">
+                           </td>
+                           </tr>
+                        <tr>
+                        <?php if (file_exists("pilight_on")) pilight_controls(); ?>
+                        <tr>
+                           <td>Buffer (1000... ms), default 0:</td>
+                           <td><?php makeInput('video_buffer', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('bu ' + document.getElementById('video_buffer').value)"></td>
+                        </tr>                        <tr>
+                           <td>Sharpness (-100...100), default 0:</td>
+                           <td><?php makeInput('sharpness', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('sh ' + document.getElementById('sharpness').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Contrast (-100...100), default 0:</td>
+                           <td><?php makeInput('contrast', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('co ' + document.getElementById('contrast').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Brightness (0...100), default 50:</td>
+                           <td><?php makeInput('brightness', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('br ' + document.getElementById('brightness').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Saturation (-100...100), default 0:</td>
+                           <td><?php makeInput('saturation', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('sa ' + document.getElementById('saturation').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>ISO (100...800), default 0:</td>
+                           <td><?php makeInput('iso', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('is ' + document.getElementById('iso').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Metering Mode, default 'average':</td>
+                           <td><select onchange="send_cmd('mm ' + this.value)"><?php makeOptions($options_mm, 'metering_mode'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Video Stabilisation, default: 'off'</td>
+                           <td><select onchange="send_cmd('vs ' + this.value)"><?php makeOptions($options_vs, 'video_stabilisation'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Exposure Compensation (-10...10), default 0:</td>
+                           <td><?php makeInput('exposure_compensation', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('ec ' + document.getElementById('exposure_compensation').value)"></td>
+                        </tr>
+                        <tr>
+                           <td>Exposure Mode, default 'auto':</td>
+                           <td><select onchange="send_cmd('em ' + this.value)"><?php makeOptions($options_em, 'exposure_mode'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>White Balance, default 'auto':</td>
+                           <td><select onchange="send_cmd('wb ' + this.value)"><?php makeOptions($options_wb, 'white_balance'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>White Balance Gains (x100):</td>
+                           <td> gain_r <?php makeInput('ag_r', 4, 'autowbgain_r', 'number'); ?> gain_b <?php makeInput('ag_b', 4, 'autowbgain_b', 'number'); ?>
+                              <input type="button" value="OK" onclick="set_ag();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Image Effect, default 'none':</td>
+                           <td><select onchange="send_cmd('ie ' + this.value)"><?php makeOptions($options_ie, 'image_effect'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Colour Effect, default 'disabled':</td>
+                           <td><select id="ce_en"><?php makeOptions($options_ce_en, 'colour_effect_en'); ?></select>
+                              u:v = <?php makeInput('ce_u', 4, 'colour_effect_u'); ?>:<?php makeInput('ce_v', 4, 'colour_effect_v'); ?>
+                              <input type="button" value="OK" onclick="set_ce();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Image Statistics, default 'Off':</td>
+                           <td><select onchange="send_cmd('st ' + this.value)"><?php makeOptions($options_st, 'stat_pass'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Rotation, default 0:</td>
+                           <td><select onchange="send_cmd('ro ' + this.value)"><?php makeOptions($options_ro, 'rotation'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Flip, default 'none':</td>
+                           <td><select onchange="send_cmd('fl ' + this.value)"><?php makeOptions($options_fl, 'flip'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Sensor Region, default 0/0/65536/65536:</td>
+                           <td>
+                              x: <?php makeInput('roi_x', 5, 'sensor_region_x', 'number'); ?> y: <?php makeInput('roi_y', 5, 'sensor_region_y', 'number'); ?><br>
+                              w: <?php makeInput('roi_w', 5, 'sensor_region_w', 'number'); ?> h:  <?php makeInput('roi_h', 5, 'sensor_region_h', 'number'); ?>
+                              <input type="button" value="OK" onclick="set_roi();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Shutter speed (0...CameraMax uS), default 0:</td>
+                           <td><?php makeInput('shutter_speed', 8, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('ss ' + document.getElementById('shutter_speed').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Image quality (0...100), default 10:</td>
+                           <td>
+                              <?php makeInput('image_quality', 4, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('qu ' + document.getElementById('image_quality').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Preview quality (1...100), default 10:<br>Width (128...1024), default 512:<br>Divider (1-16), default 1:</td>
+                           <td>
+                              Quality: <?php makeInput('quality', 4); ?><br>
+                              Width: <?php makeInput('width', 4); ?><br>
+                              Divider: <?php makeInput('divider', 4); ?><br>
+                              <input type="button" value="OK" onclick="set_preview();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Raw Layer, default: 'off'</td>
+                           <td><select onchange="send_cmd('rl ' + this.value)"><?php makeOptions($options_rl, 'raw_layer'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Video bitrate (0...25000000), default 17000000:</td>
+                           <td>
+                              <?php makeInput('video_bitrate', 10, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('bi ' + document.getElementById('video_bitrate').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Minimise frag (0/1), default 0:<br>Init Quantisation, default 25:<br>Encoding qp, default 31:</td>
+                           <td>
+                              MF: <?php makeInput('minimise_frag', 4, null, 'number'); ?><br>
+                              IQ: <?php makeInput('initial_quant', 4, null, 'number'); ?><br>
+                              QP: <?php makeInput('encode_qp', 4, null, 'number'); ?><br>
+                              <input type="button" value="OK" onclick="set_encoding();">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>MP4 Boxing mode :</td>
+                           <td><select onchange="send_cmd('bo ' + this.value)"><?php makeOptions($options_bo, 'MP4Box'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Watchdog, default interval 3s, errors 3s:</td>
+                           <td>Interval <?php makeInput('watchdog_interval', 3, null, 'number'); ?>s&nbsp;&nbsp;&nbsp;&nbsp;Errors <?php makeInput('watchdog_errors', 3, null, 'number'); ?>
+                           <input type="button" value="OK" onclick="send_cmd('wd ' + 10 * document.getElementById('watchdog_interval').value + ' ' + document.getElementById('watchdog_errors').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Motion detect mode:</td>
+                           <td><select onchange="send_cmd('mx ' + this.value);setTimeout(function(){location.reload(true);}, 1000);"><?php makeOptions($options_mx, 'motion_external'); ?></select></td>
+                        </tr>
+                        <tr>
+                           <td>Log size lines, default 5000:</td>
+                           <td>
+                              <?php makeInput('log_size', 6, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('ls ' + document.getElementById('log_size').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>HDMI Preview, default: 'off'</td>
+                           <td><select onchange="send_cmd('hp ' + this.value)"><?php makeOptions($options_hp, 'hdmi_preview'); ?></select></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+            </div>
+            <div class="panel panel-default" <?php  if($config['motion_external'] == '1') echo "style ='display:none;'"; ?>>
+               <div class="panel-heading">
+                  <h2 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Motion Settings</a>
+                  </h2>
+               </div>
+               <div id="collapseTwo" class="panel-collapse collapse">
+                  <div class="panel-body">
+                     <table class="settingsTable">
+                        <tr>
+                          <td>Motion Vector Preview:</td>
+                          <td>
+                            <select onchange="send_cmd('vp ' + this.value);setTimeout(function(){location.reload(true);}, 1000);" id="preview_select"><?php makeOptions($options_vp, 'vector_preview'); ?></select>
+                          </td>
+                        </tr>
+                        <tr>
+                           <td>Noise level (1-255 / >1000):</td>
+                           <td>
+                              <?php makeInput('motion_noise', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mn ' + document.getElementById('motion_noise').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Threshold (1-32000):</td>
+                           <td>
+                              <?php makeInput('motion_threshold', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mt ' + document.getElementById('motion_threshold').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Clipping factor (2-50), default 3:</td>
+                           <td>
+                              <?php makeInput('motion_clip', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mc ' + document.getElementById('motion_clip').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Mask Image:</td>
+                           <td>
+                              <?php makeInput('motion_image', 30); ?><input type="button" value="OK" onclick="send_cmd('mi ' + document.getElementById('motion_image').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Delay Frames to detect:</td>
+                           <td>
+                              <?php makeInput('motion_initframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('ms ' + document.getElementById('motion_initframes').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Change Frames to start:</td>
+                           <td>
+                              <?php makeInput('motion_startframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('mb ' + document.getElementById('motion_startframes').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Still Frames to stop:</td>
+                           <td>
+                              <?php makeInput('motion_stopframes', 5, null, 'number'); ?><input type="button" value="OK" onclick="send_cmd('me ' + document.getElementById('motion_stopframes').value)">
+                           </td>
+                        </tr>
+                        <tr>
+                           <td>Save vectors to .dat:<br>(Uses more space)</td>
+                           <td><select onchange="send_cmd('mf ' + this.value);"><?php makeOptions($options_mf, 'motion_file'); ?></select></td>
+                        </tr>
+                     </table>
+                  </div>
+               </div>
+            </div>
             <div class="panel panel-default">
                <div class="panel-heading">
                   <h2 class="panel-title">
@@ -343,6 +630,20 @@
 					 <table class="settingsTable">
 						<?php macroUpdates(); ?>
 					 </table>
+                  </div>
+               </div>
+            </div>
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h2 class="panel-title">
+                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Help</a>
+                  </h2>
+               </div>
+               <div id="collapseFour" class="panel-collapse collapse">
+                  <div class="panel-body">
+                    Github: <a href="https://github.com/silvanmelchior/RPi_Cam_Web_Interface" target="_blank">https://github.com/silvanmelchior/RPi_Cam_Web_Interface</a><br>
+                    Forum: <a href="http://www.raspberrypi.org/forums/viewtopic.php?f=43&t=63276" target="_blank">http://www.raspberrypi.org/forums/viewtopic.php?f=43&t=63276</a><br>
+                    Wiki: <a href="http://elinux.org/RPi-Cam-Web-Interface" target="_blank">http://elinux.org/RPi-Cam-Web-Interface</a>
                   </div>
                </div>
             </div>
