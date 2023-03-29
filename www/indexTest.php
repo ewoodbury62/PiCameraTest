@@ -280,55 +280,49 @@
 
 <html>
 <body  onload="setTimeout('init(<?php echo "$mjpegmode, $video_fps, $divider" ?>);', 100);">
-	 <head>
-      <meta name="viewport" content="width=550, initial-scale=1">
-      <title><?php echo CAM_STRING; ?></title>
-      <link rel="stylesheet" href="css/style_minified.css" />
-      <link rel="stylesheet" href="<?php echo getStyle(); ?>" />
-      <script src="js/style_minified.js"></script>
-      <script src="js/script.js"></script>
-      <script src="js/pipan.js"></script>
-   </head>
-  <link rel="stylesheet" type="text/css" href="wrapSM.css" />
-  <div class="float-container">
-    <div class="float-child">
-  <div class = "homePage" id = "homePage" style="float:left;">
-    <h1 id="SmartMirror" class="SmartMirror" style="display: flex;justify-content: space-around;">
-      Smart Mirror
-    </h1>
-    <p>
-      <button onclick="timeClick()">Time</button>
-      <button onclick="weatherClick()">Weather</buttonon>
-      <button onclick="QOTDClick()">Daily Quote</button>
-      <button>Camera</button>
-    </p>
-    <p>
-      <button onclick="voiceClick()">Voice Activation</button>
-      <button>LED Control</button>
-      <button onclick="tubeClick()">YouTube Tutorials</button>
-    </p>
-  </div>
-    </div>
-    <div class = "float-child">
-      <div class = "app" id = "app" style="margin:10px;">
-        
-	  
-      <div class="container-fluid text-center liveimage">
-         <div><img id="mjpeg_dest" <?php echo getLoadClass() . getImgWidth();?>
-		 <?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg"></div>
-      </div>
+	<head>
+    		<meta name="viewport" content="width=550, initial-scale=1">
+      		<title><?php echo CAM_STRING; ?></title>
+		<link rel="stylesheet" type="text/css" href="wrapSM.css" />
+      		<link rel="stylesheet" href="css/style_minified.css" />
+      		<link rel="stylesheet" href="<?php echo getStyle(); ?>" />
+      		<script src="js/style_minified.js"></script>
+		<script src="scriptSM.js"></script>
+      		<script src="js/script.js"></script>
+      		<script src="js/pipan.js"></script>
+   	</head>
+		<div class="float-container">
+	    		<div class="float-child">
+	  			<div class = "homePage" id = "homePage" style="float:left;">
+	    				<h1 id="SmartMirror" class="SmartMirror" style="display: flex;justify-content: space-around;">
+	      					Smart Mirror
+	    				</h1>
+	    				<p>
+					      <button onclick="timeClick()">Time</button>
+					      <button onclick="weatherClick()">Weather</buttonon>
+					      <button onclick="QOTDClick()">Daily Quote</button>
+					      <button>Camera</button>
+					</p>
+					<p>
+      						<button onclick="voiceClick()">Voice Activation</button>
+      						<button>LED Control</button>
+      						<button onclick="tubeClick()">YouTube Tutorials</button>
+    					</p>
+  				</div>
+    			</div>
+    			<div class = "float-child">
+      				<div class = "app" id = "app" style="margin:10px;">
+      					<div class="container-fluid text-center liveimage">
+         					<div>
+							<img id="mjpeg_dest" <?php echo getLoadClass() . getImgWidth();?>
+		 					<?php if(file_exists("pipan_on")) echo "ontouchstart=\"pipan_start()\""; ?> onclick="toggle_fullscreen(this);" src="./loading.jpg">
+	      					</div>
+      					</div>
     
-      </div>
-    </div>
-  </div>
-      <?php if ($debugString != "") echo "$debugString<br>"; ?>
-        
-        
-
-        
-        
-          
-  <script src="scriptSM.js"></script>
+      				</div>
+    			</div>
+  		</div>
+      	<?php if ($debugString != "") echo "$debugString<br>"; ?>
 </body>
 </html>
 
