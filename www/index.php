@@ -317,35 +317,7 @@
          <a href="schedule.php" class="btn btn-default" <?php getdisplayStyle('settings', $userLevel); ?>>Edit schedule settings</a>
       </div>
     
-      <div class="container-fluid text-center">
-         <div class="panel-group" id="accordion" <?php getdisplayStyle('settings', $userLevel); ?> >
-            
-            
-            <div class="panel panel-default">
-               
-               <div id="collapseThree" class="panel-collapse collapse">
-                  <div class="panel-body">
-                     <input id="toggle_stream" type="button" class="btn btn-primary" value="<?php echo $streamButton; ?>" onclick="set_stream_mode(this.value);">
-                     <input id="allow_simple" type="button" class="btn btn-primary" value="<?php echo $allowSimple; ?>" onclick="set_display(this.value);">
-                     <input id="shutdown_button" type="button" value="shutdown system" onclick="sys_shutdown();" class="btn btn-danger">
-                     <input id="reboot_button" type="button" value="reboot system" onclick="sys_reboot();" class="btn btn-danger">
-                     <input id="reset_button" type="button" value="reset settings" onclick="if(confirm('Are you sure to reset the settings to the default values?')) {send_cmd('rs 1');setTimeout(function(){location.reload(true);}, 1000);}" class="btn btn-danger">
-                     <form action='<?php echo ROOT_PHP; ?>' method='POST'>
-                        <br>Style
-                        <select name='extrastyle' id='extrastyle'>
-                           <?php getExtraStyles(); ?>
-                        </select>
-                        &nbsp;<button type="submit" name="OK" value="OK" >OK</button>
-                     </form>
-					 Set Date/Time <input type='text' size=20 id='timestr' value='13 FEB 2018 12:00:00'><input type="button" value="OK" onclick="sys_settime();"<BR>
-					 <table class="settingsTable">
-						<?php macroUpdates(); ?>
-					 </table>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
+      
       <?php if ($debugString != "") echo "$debugString<br>"; ?>
    </body>
 </html>
