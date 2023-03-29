@@ -322,11 +322,7 @@
             
             
             <div class="panel panel-default">
-               <div class="panel-heading">
-                  <h2 class="panel-title">
-                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">System</a>
-                  </h2>
-               </div>
+               
                <div id="collapseThree" class="panel-collapse collapse">
                   <div class="panel-body">
                      <input id="toggle_stream" type="button" class="btn btn-primary" value="<?php echo $streamButton; ?>" onclick="set_stream_mode(this.value);">
